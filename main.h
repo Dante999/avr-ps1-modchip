@@ -8,7 +8,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-
+#define F_CPU		4000000UL
 
 #define REG_DDR		DDRB
 #define REG_PIN		PINB

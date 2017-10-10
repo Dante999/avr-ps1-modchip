@@ -5,12 +5,11 @@
  *      Author: dante999
  */
 
+#include "main.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include "inject.h"
 #include "debug.h"
-#include "main.h"
-
 
 
 /*
@@ -60,7 +59,9 @@ void injectAfterBootup() {
 	REG_DDR  &= ~(1<<PIN_DATA);
 	REG_PORT &= ~(1<<PIN_DATA);
 
-	for( uint8_t i=0; i < 40; i++) {
+	uint8_t i = 0;
+
+	for(i=0; i < 40; i++) {
 		inject_region(REGION_EUROPE);
 	}
 
