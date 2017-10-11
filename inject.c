@@ -8,9 +8,10 @@
 
 
 #include "inject.h"
+#include "main.h"
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include "main.h"
+
 #include "debug.h"
 
 #define REGION_LENGTH			44
