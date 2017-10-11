@@ -9,8 +9,6 @@
 #define MAIN_H_
 
 
-#define F_CPU		3200000
-
 #define REG_DDR		DDRB
 #define REG_PIN		PINB
 #define REG_PORT	PORTB
@@ -21,12 +19,6 @@
 #define PIN_SQCK	PB2
 #define PIN_GATE	PB3
 #define PIN_DATA	PB4		//The pin that outputs the SCEE SCEA SCEI string
-
-
-
-
-//GATE_WFCK
-// IC  SONY CXD2938Q 843R25F Pin5
 
 
 

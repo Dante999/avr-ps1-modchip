@@ -4,8 +4,8 @@ TARGET=psx_modchip
 # Name of the Microcontroller
 MCU=attiny13
 
-# Clock of the Microcontroller
-F_CPU=4000000
+# Clock of the Microcontroller (Hz)
+F_CPU=9600000
 
 # List of all sources (only source-files)
 SOURCES= main.c
@@ -21,6 +21,7 @@ BAUD=-B115200
 BUILDPATH=./build/
 OBJECTS=$(SOURCES:.c=.o)
 CFLAGS=-c -Os
+CFLAGS += -DF_CPU=$(F_CPU)
 LDFLAGS=
 
 all: hex eeprom
