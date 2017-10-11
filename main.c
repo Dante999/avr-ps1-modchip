@@ -6,10 +6,10 @@
  */
 
 #include "main.h"
-#include <avr/io.h>
 #include <util/delay.h>
 #include "inject.h"
 #include "debug.h"
+
 
 
 /*
@@ -62,7 +62,7 @@ void injectAfterBootup() {
 	uint8_t i = 0;
 
 	for(i=0; i < 40; i++) {
-		inject_region(REGION_EUROPE);
+		inject_region_code(REGION_EUROPE);
 	}
 
 

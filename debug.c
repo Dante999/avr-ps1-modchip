@@ -5,7 +5,6 @@
  *      Author: dante999
  */
 
-#include <avr/io.h>
 #include "main.h"
 
 

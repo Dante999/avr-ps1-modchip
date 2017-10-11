@@ -8,15 +8,14 @@
 #ifndef INJECT_H_
 #define INJECT_H_
 
-#include <avr/io.h>
 
 
-#define REGION_EUROPE      0
-#define REGION_AMERICA     1
-#define REGION_JAPAN       2
+#define REGION_EUROPE
+//#define REGION_AMERICA
+//#define REGION_JAPAN
 
 
-void inject_region(uint8_t region);
+void inject_region_code();
 
 
 #endif /* INJECT_H_ */

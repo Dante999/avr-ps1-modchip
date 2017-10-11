@@ -8,18 +8,20 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+#define AVR_ATtiny13
+
+#include <avr/io.h>
+//#include <avr/iotn13.h>
 
 #define REG_DDR		DDRB
 #define REG_PIN		PINB
 #define REG_PORT	PORTB
 
-
 #define PIN_DEBUG	PB0
 #define PIN_SUBQ	PB1
 #define PIN_SQCK	PB2
 #define PIN_GATE	PB3
-#define PIN_DATA	PB4		//The pin that outputs the SCEE SCEA SCEI string
-
+#define PIN_DATA	PB4
 
 
 #endif /* MAIN_H_ */
