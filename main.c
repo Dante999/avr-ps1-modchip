@@ -27,7 +27,7 @@
 
 // the delay in milliseconds between the playstation is powered up and the first
 // initial injection starts
-#define DELAY_AFTER_BOOTUP_MS	4000
+#define DELAY_AFTER_BOOTUP_MS	4300
 
 
 
@@ -62,7 +62,7 @@ void injectAfterBootup() {
 	uint8_t i = 0;
 
 	for(i=0; i < 40; i++) {
-		inject_region_code(REGION_EUROPE);
+		inject_region_code();
 	}
 
 

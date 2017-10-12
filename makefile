@@ -8,8 +8,8 @@ MCU=attiny13
 F_CPU=9600000
 
 # Fuses
-L_FUSE=0x79
-H_FUSE=0xff
+L_FUSE=0x7A
+H_FUSE=0xFF
 
 # Target where the files should be placed
 BUILDPATH=./build
@@ -25,8 +25,17 @@ PROGRAMMER=dragon_isp
 #BAUD=-B115200
 
 OBJECTS=$(SOURCES:%.c=$(BUILDPATH)/%.o)
-CFLAGS=-c -Os
-CFLAGS += -DF_CPU=$(F_CPU)
+CFLAGS  = -c
+CFLAGS += -Os
+CFLAGS += -Wall
+CFLAGS += -fpack-struct
+CFLAGS += -fshort-enums
+CFLAGS += -ffunction-sections
+CFLAGS += -fdata-sections
+CFLAGS += -std=gnu99
+CFLAGS += -funsigned-char
+CFLAGS += -funsigned-bitfields
+CFLAGS += -DF_CPU=$(F_CPU)UL
 LDFLAGS=
 
 

@@ -23,12 +23,13 @@
 
 #define DELAY_AFTER_INJECTION	90
 
-#define TIMER_OCR_OFFSET		-7
+#define TIMER_OCR_OFFSET		-5
 
 
 #ifdef  REGION_EUROPE
 	//SCEE 1 00110101 00, 1 00111101 00, 1 01011101 00, 1 01011101 00
 	static char SCEXData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
+
 #endif
 
 #ifdef REGION_AMERICA
@@ -50,28 +51,28 @@ volatile uint8_t ms_counter = 0;
 
 
 
-
+// using a F_CPU from 9.6MHz
+// 
 void inject_startTimer() {
 
 	sei();
 
-	TCCR0A |= (1<<WGM01);						// CTC-Mode
+	TCCR0A |= (1<<WGM01);					// CTC-Mode
 
-//	TCCR0B |= (1<<CS02) | (1<<CS00) ;			// prescaler 1024 ->  4,6875 KHz (213,133us)
-//	TCCR0B |= (1<<CS02) | (1<<CS00) ;			// prescaler 256  -> 18,7500 KHz ( 53,333us)
-	TCCR0B |= (1<<CS01) | (1<<CS00) ;			// prescaler  64  -> 75,0000 KHz ( 13,333us)
+//	TCCR0B |= (1<<CS02) | (1<<CS00) ;			// prescaler 1024 ->   9,375 KHz (106,667us)
+//	TCCR0B |= (1<<CS02) | (1<<CS00) ;			// prescaler 256  ->  37,500 KHz ( 26,667us)
+	TCCR0B |= (1<<CS01) | (1<<CS00) ;			// prescaler  64  -> 150,000 KHz (  6,667us)
 
-	TIMSK0 |= (1<<OCIE0A);						// enable compare A interrupt
+	TIMSK0 |= (1<<OCIE0A);					// enable compare A interrupt
 
-	OCR0A = 75+TIMER_OCR_OFFSET;				// set compare register
+	OCR0A = 149+TIMER_OCR_OFFSET;				// set compare register
 
-	ms_counter = 0;								// set millisecond-counter back to zero
+	ms_counter = 0;						// set millisecond-counter back to zero
 
 }
 
 void inject_stopTimer() {
-	TCCR0B = 0x00;
-	cli();
+	TIMSK0 &= ~(1<<OCIE0A);
 }
 
 
@@ -80,6 +81,7 @@ ISR(TIM0_COMPA_vect)
 	ms_counter++;
 }
 
+
 void inject_write_high_bit() {
 
 	debug_setPinHigh();
@@ -87,8 +89,10 @@ void inject_write_high_bit() {
 	REG_DDR &= ~(1<<PIN_GATE);
 
 	if( REG_PIN & (1<<PIN_GATE) ) {
-		REG_DDR  &=  ~(1<<PIN_DATA);			// set data-Pin as Output
-		REG_PORT &= ~(1<<PIN_DATA);				// set the data-Pin LOW
+//		REG_DDR  &=  ~(1<<PIN_DATA);			// set data-Pin as Output
+//		REG_PORT &= ~(1<<PIN_DATA);				// set the data-Pin LOW
+		REG_DDR |= (1<<PIN_DATA);
+		REG_PORT |= (1<<PIN_DATA);
 	}
 	else {
 		REG_DDR  |=  (1<<PIN_DATA);			// set data-Pin as Output
@@ -112,7 +116,9 @@ void inject_write_low_bit() {
 void inject_region_code() {
 
 	uint8_t	i		= 0;
-	char	*data 	= SCEXData;
+	static char SCEEData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
+//	static char SCEEData[44] = {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0};
+	char	*data 	= SCEEData;
 
 
 	inject_startTimer();
@@ -131,7 +137,7 @@ void inject_region_code() {
 
 			if( data[i] == 0) {
 				inject_write_low_bit();
-	//			debug_setPinLow();
+//				debug_setPinLow();
 
 			}
 			else {
