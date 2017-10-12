@@ -7,6 +7,10 @@ MCU=attiny13
 # Clock of the Microcontroller (Hz)
 F_CPU=9600000
 
+# Fuses
+L_FUSE=0x79
+H_FUSE=0xff
+
 # Target where the files should be placed
 BUILDPATH=./build
 
@@ -16,9 +20,9 @@ SOURCES+= debug.c
 SOURCES+= inject.c 
 
 # Progammer
-PROGRAMMER=arduino
-PORT=-P/dev/ttyS0
-BAUD=-B115200
+PROGRAMMER=dragon_isp
+#PORT=-P/dev/ttyS0
+#BAUD=-B115200
 
 OBJECTS=$(SOURCES:%.c=$(BUILDPATH)/%.o)
 CFLAGS=-c -Os
@@ -51,8 +55,14 @@ $(BUILDPATH)/%.o: %.c
 size:
 	avr-size --mcu=$(MCU) -C $(BUILDPATH)/$(TARGET).elf
 
-program:
-	avrdude -p$(MCU) $(PORT) $(BAUD) -c$(PROGRAMMER) -Uflash:w:$(BUILDPATH)/$(TARGET).hex:a
+flash_hex:
+	avrdude -p $(MCU) $(PORT) $(BAUD) -c $(PROGRAMMER) -U flash:w:$(BUILDPATH)/$(TARGET).hex:a
+
+read_fuses:
+	avrdude -p $(MCU) $(PORT) $(BAUD) -c $(PROGRAMMER) -U lfuse:r:-:i
+
+flash_fuses:
+	avrdude -p $(MCU) $(PORT) $(BAUD) -c $(PROGRAMMER) -U lfuse:w:$(L_FUSE):m -U hfuse:w:$(H_FUSE):m
 
 clean_tmp:
 	rm -rf $(BUILDPATH)/*.o
