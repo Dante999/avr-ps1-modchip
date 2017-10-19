@@ -29,6 +29,9 @@
 // initial injection starts
 #define DELAY_AFTER_BOOTUP_MS	4300
 
+// default value: 70
+// works fine on my SCPH-7502
+#define REPEAT_INJECTION		70
 
 
 
@@ -59,9 +62,13 @@ void injectAfterBootup() {
 	REG_DDR  &= ~(1<<PIN_DATA);
 	REG_PORT &= ~(1<<PIN_DATA);
 
+
+	inject_region_code();
+
+
 	uint8_t i = 0;
 
-	for(i=0; i < 40; i++) {
+	for(i=0; i < REPEAT_INJECTION; i++) {
 		inject_region_code();
 	}
 
@@ -76,6 +83,8 @@ int main() {
 	init();
 
 	injectAfterBootup();
+
+	
 
 
 	while(1) {

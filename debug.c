@@ -6,7 +6,7 @@
  */
 
 #include "main.h"
-
+#include "debug.h"
 
 /*******************************************************************************
  * @brief	initialize the debug I/O pin
@@ -25,43 +25,31 @@ void debug_init() {
 
 
 /*******************************************************************************
- * @brief	sets the debug pin to HIGH
+ * @brief	controls the debug pin
  * 
- * @param	none
+ * @param	mode	LOW		sets the pin to a low-level
+ * 					HIGH	sets the pin to a high-level
+ * 					TOGGLE	toggles the pin
  *
  * @return	none
  *  
 *******************************************************************************/
-void debug_setPinHigh() {
-	REG_PORT |= (1<<PIN_DEBUG);
-}
+void debug_set_pin(uint8_t mode) {
 
+	switch(mode) {
+		
+		case DEBUG_LOW:
+			REG_PORT &= ~(1<<PIN_DEBUG);
+			break;
+			
+		case DEBUG_HIGH:
+			REG_PORT |= (1<<PIN_DEBUG);
+			break;
+			
+		case DEBUG_TOGGLE:
+			REG_PORT ^= (1<<PIN_DEBUG);
+			break;
+			
+	}
 
-/*******************************************************************************
- * @brief	sets the debug pin to LOW
- * 
- * @param	none
- * 
- * @return	none
- *
-*******************************************************************************/
-void debug_setPinLow() {
-	REG_PORT &= ~(1<<PIN_DEBUG);
-}
-
-
-/*******************************************************************************
- * @brief	toggles the debug pin
- * 
- * if the pin is currently HIGH, the function will change the debug-pin to a
- * LOW-Level. if the pin is currently LOW, the function will change the
- * debug-pin to a HIGH-level
- * 
- * @param	none
- * 
- * @return	none
- *
-*******************************************************************************/
-void debug_togglePin() {
-	REG_PORT ^= (1<<PIN_DEBUG);
 }

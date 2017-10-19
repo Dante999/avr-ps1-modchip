@@ -17,30 +17,33 @@
 
 #include "debug.h"
 
-#define REGION_LENGTH			44
+#define REGION_LENGTH				44
+#define TIMER_OCR_OFFSET			-5
 
-#define BIT_LENGTH_MS			4
+#define BIT_LENGTH_MS				4
+#define DELAY_AFTER_INJECTION_MS	90
 
-#define DELAY_AFTER_INJECTION	90
 
-#define TIMER_OCR_OFFSET		-5
 
 
 #ifdef  REGION_EUROPE
 	//SCEE 1 00110101 00, 1 00111101 00, 1 01011101 00, 1 01011101 00
 	static char SCEXData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
 
-#endif
-
-#ifdef REGION_AMERICA
+#elif defined REGION_AMERICA
 	//SCEA: 1 00110101 00, 1 00111101 00, 1 01011101 00, 1 01111101 00
 	static char SCEXData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
-#endif
 
-#ifdef REGION_JAPAN
+
+#elif defined REGION_JAPAN
 	//SCEI: 1 00110101 00, 1 00111101 00, 1 01011101 00, 1 01101101 00
 	static char SCEXData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
+
+#else
+	#error "Please define a Region!"
 #endif
+
+
 
 
 
@@ -56,6 +59,7 @@ volatile uint8_t ms_counter = 0;
 void inject_startTimer() {
 
 	sei();
+
 
 	TCCR0A |= (1<<WGM01);					// CTC-Mode
 
@@ -82,30 +86,24 @@ ISR(TIM0_COMPA_vect)
 }
 
 
-void inject_write_high_bit() {
-
-	debug_setPinHigh();
-
+void inject_write_high_bit() 
+{
 	REG_DDR &= ~(1<<PIN_GATE);
 
 	if( REG_PIN & (1<<PIN_GATE) ) {
-//		REG_DDR  &=  ~(1<<PIN_DATA);			// set data-Pin as Output
-//		REG_PORT &= ~(1<<PIN_DATA);				// set the data-Pin LOW
-		REG_DDR |= (1<<PIN_DATA);
-		REG_PORT |= (1<<PIN_DATA);
+		REG_DDR  &=  ~(1<<PIN_DATA);			// set data-Pin as Input
+		REG_PORT &= ~(1<<PIN_DATA);				// set to high impedance
 	}
 	else {
-		REG_DDR  |=  (1<<PIN_DATA);			// set data-Pin as Output
+		REG_DDR  |=  (1<<PIN_DATA);				// set data-Pin as Output
 		REG_PORT &= ~(1<<PIN_DATA);				// set the data-Pin LOW
 	}
-
 
 }
 
 
-void inject_write_low_bit() {
-
-	debug_setPinLow();
+void inject_write_low_bit() 
+{
 	REG_DDR  |=  (1<<PIN_DATA);					// set data-Pin as Output
 	REG_PORT &= ~(1<<PIN_DATA);					// set the data-Pin LOW
 }
@@ -113,48 +111,44 @@ void inject_write_low_bit() {
 
 
 
-void inject_region_code() {
-
+void inject_region_code() 
+{
 	uint8_t	i		= 0;
-	static char SCEEData[44] = {1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1,1,1,0,1,0,0};
-//	static char SCEEData[44] = {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0};
-	char	*data 	= SCEEData;
 
+
+	inject_write_low_bit();
+
+	_delay_ms(DELAY_AFTER_INJECTION_MS);
 
 	inject_startTimer();
 
 
-
-//	REG_DDR  |=  (1<<PIN_GATE);
-//	REG_PORT &= ~(1<<PIN_GATE);
-
-	for( i=0; i < REGION_LENGTH; i++) {
+	for( i=0; i < 44; i++) {
 
 		ms_counter = 0;
 
 		while(ms_counter < 4) {
 
-
-			if( data[i] == 0) {
-				inject_write_low_bit();
-//				debug_setPinLow();
-
+			if( SCEXData[i] == 1) {
+				inject_write_high_bit();
+				debug_set_pin(DEBUG_HIGH);
 			}
 			else {
-				inject_write_high_bit();
-	//			debug_setPinHigh();
-
+				inject_write_low_bit();
+				debug_set_pin(DEBUG_LOW);
 			}
 
 		}
 
 	}
 
-	_delay_ms(DELAY_AFTER_INJECTION);
-
+	
 
 	REG_DDR  &= ~(1<<PIN_DATA);					// data-pin high impedanze
 	REG_PORT &= ~(1<<PIN_DATA);					// deactivate pullups
+	
+	REG_DDR  &= ~(1<<PIN_GATE);
+	REG_PORT &= ~(1<<PIN_GATE);
 
 	inject_stopTimer();
 
