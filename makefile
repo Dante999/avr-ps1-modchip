@@ -40,7 +40,7 @@ LDFLAGS=
 
 
 
-all: clean hex eeprom flash_hex
+all: clean hex eeprom
 
 hex: $(TARGET).hex size
 

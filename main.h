@@ -11,7 +11,18 @@
 #define AVR_ATtiny13
 
 #include <avr/io.h>
-//#include <avr/iotn13.h>
+
+
+/*
+ * Pinout on Playstation
+ *
+ * GATE	-	IC732.Pin-5		(WFCK)
+ * DATA	-	IC732.Pin-42	(CEO)
+ * SUBQ	-	IC304.Pin-24	(SUBQ)
+ * SQCK	-	IC304.Pin-26	(SQCK)
+ *
+ */
+
 
 #define REG_DDR		DDRB
 #define REG_PIN		PINB

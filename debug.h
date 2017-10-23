@@ -13,7 +13,6 @@
 #define DEBUG_TOGGLE	2
 
 
-
 void debug_init();
 void debug_set_pin(uint8_t mode);
 

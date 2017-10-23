@@ -1,12 +1,7 @@
-/*
- * debug.c
- *
- *  Created on: 01.10.2017
- *      Author: dante999
- */
-
 #include "main.h"
 #include "debug.h"
+
+
 
 /*******************************************************************************
  * @brief	initialize the debug I/O pin
