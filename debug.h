@@ -1,16 +1,9 @@
-/*
- * debug.h
- *
- *  Created on: 01.10.2017
- *      Author: dante999
- */
-
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
-#define DEBUG_LOW		0
-#define DEBUG_HIGH		1
-#define DEBUG_TOGGLE	2
+#define DEBUG_LOW       0
+#define DEBUG_HIGH      1
+#define DEBUG_TOGGLE    2
 
 
 void debug_init();
