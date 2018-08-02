@@ -3,22 +3,41 @@
 -- this project ist still under construction --
 the source code is definitively in a heavy experimental state at the moment :)
 
+## Introduction
+At first I have to say, I'm not a great friend of all the arduino environment out 
+there. Don't get me wrong, it's great to make things easier for beginners so
+more people get into programming embedded systems like that. But I don't like 
+the idea to need a bigger microcontroller just because I'm using the Arduino
+library with it's C++ wrapper classes which needs way more space than plain C
+and is less performant. 
+
+With this background, I searched for an implementation of an Playstation 1 Modchip
+based on ATMEL 8bit microcontrollers. The best project I have found so far is
+that one from **PSNEE** on [github](https://github.com/kalymos/PsNee). The guys
+did a very well job and a lot of research to create a functional modchip based
+on atmel microcontrollers. So thanks a lot for the inspiration!
+
+Like I said at the beginning, I don't like the Arduion IDE with it's C++ wrapper
+classes, I saw a challenge to myself to create my own modchip with plain C.
+
 ## Features
 In this early stage the Modchip injects the region code at the boot sequence
 of the playstation for a certain time. 
 
-## Target Hardware
-The software is written for the **ATTiny85**, especially for the **ATTiny85 - Digispark Rev.3**
-(see [link](https://www.az-delivery.de/products/digispark-board?ls=de#description). 
+So the Pins **SUBQ** and **SQCK** for detecting on which sector of the CD the 
+reader is located, is currently not used!
 
-For the schematic see this
-[link](https://s3.amazonaws.com/digistump-resources/files/97a1bb28_DigisparkSchematic.pdf). 
+## Target Hardware
+The software is written for the **ATTiny85**, especially for the **ATTiny85 - Digispark Rev.3**. 
+Vendors for this product are for example [az-delivery](https://www.az-delivery.de/products/digispark-board?ls=de#description). 
+
+The schematic of this PCB is for example available under this [link](https://s3.amazonaws.com/digistump-resources/files/97a1bb28_DigisparkSchematic.pdf). 
 But watch out, the **Diode D3** is **mirrored**! On the PCB the Diode is polarized
 like it should: from the 5V USB Connector to the 5V Supply of the PCB. So it's just
 a schematic-drawn-failure. 
 
 ## Supported/Tested Playstation
-Currently the only Playstation which I own is the *SCPH-7502 (Board PU-22)*, so
+Currently the only Playstation which I own is the **SCPH-7502 (Board PU-22)**, so
 at the moment is this the only tested model. But normally all Playstations with
 a PU-22 or newer Board should work. 
 
@@ -27,13 +46,13 @@ if youre not sure which Board Version your Playstation may have.
 
 ## Instructions
 A really good video which shows how the protection works can be found on 
-[youtube (Technology Connections)](https://www.youtube.com/watch?v=XUwSOfQ1D3c)
+[youtube (Channel: Technology Connections)](https://www.youtube.com/watch?v=XUwSOfQ1D3c)
 
 ## Pinout
 this is the pinout on the playstation 1 mainboard:
 
-    C325 Minus      GND
-    C325 Plus       3.3V
+    C325 Minus      GND             -> our Ground connection
+    C325 Plus       3.3V            -> do not use 5V as ATTiny Supply Voltage!
 
     IC304 Pin24     SUBQ            -> data-line for indication the position of the lens
     IC304 Pin26     SQCK            -> data-clock for SUBQ
@@ -41,3 +60,8 @@ this is the pinout on the playstation 1 mainboard:
     IC732 Pin5      Gate (WFCK)     -> needed for PU22 or newer boards (modulatet on the data-line
     for HIGH-Level)
     IC732 Pin42     Data (CEO)      -> data-line where we inject the region code
+
+
+
+
+
