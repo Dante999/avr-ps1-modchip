@@ -11,6 +11,7 @@
 
 void inject_region_code();
 void inject_startTimer();
+void inject_stopTimer();
 void inject_release();
 void inject_sequence();
 

@@ -66,30 +66,81 @@ region code. So generally we can say that one Bit must have a pulsewidth of
 
 ```
 
-So now we know how he bits should look like, lets concentrate on the bytes. We
-do an example with the European Region Code (SCEE). The only thing we also have
-to do is, to switch the  highest and the lowest 4 Bits, becaues that is the format
-of the ASCII string what the playstation wants. So here is the example: 
+So now we know how he bits should look like, lets concentrate on the data bytes.
+In the table below are all characters listed to build every region code:
+- SCEE for Europe
+- SCEA for America
+- SCEI for Japan
+
+I think understanding what ASCII codes are is not that hard, so let's focus on 
+how the ASCII codes need to be transformed for the playstation data line. At first
+we need to mirror each byte because the playstation reads that stream from 
+LSB to MSB and that means we have to start the injection from the 'lowest' to 
+the 'highest' bit. In other words: inject from right to left. So fine, that wasn't
+that hard, at least we have to invert each Bit an we're done. I'm not sure if 
+this is because of the positive/negative wobble-offset on the cd which normally
+holds this stream. 
 
 ```
-    Letter  ASCII-Hex   ASCII-Binary	Inject Sequence
-    S         0x53      0101 0011	-> 0011 0101
-    C         0x43      0100 0011	-> 0011 0100
-    E         0x45      0100 0101	-> 0101 0100
-    E         0x45      0100 0101	-> 0101 0100
+    Letter  ASCII-Hex   ASCII-Binary	Backwards       inverted
+    S         0x53      0101 0011	-> 1100 1010    -> 0011 0101
+    C         0x43      0100 0011	-> 1100 0010    -> 0011 1101
+    E         0x45      0100 0101	-> 1010 0010    -> 0101 1101
+
+    E         0x45      0100 0101	-> 1010 0010    -> 0101 1101
+    A         0x41      0100 0001       -> 1000 0010    -> 0111 1101
+    I         0x49      0100 1001       -> 1001 0010    -> 0110 1101
 ```
+
 
 To complete the how-to we need to talk about the protocol which se playstation
 uses. This is pretty simple: there is 1 start bit (High) and 2 stop bits (Low). 
-So here is the complete injection stream:
+So all we have to do is surround each Byte with a `1`at the beginning an two `0`s 
+at the end. So finally, here is the complete injection stream for the European
+Playstation:
 
 ```
-
-1 0011 0101 00 1 0011 0100
+      S                C                E                E
+  /       \        /       \         /      \        /       \
+  |       |        |       |        |       |        |       |
+1 0011 0101 00   1 0011 0100 00   1 0101 1101 00   1 0101 1101 00
+^           ^^
+|           ||
+|           ||
+|           |'----- Stop Bit
+|           '---- Stop Bit
+|
+'----- Start Bit
 
 ```
+### Model specific stuff
+There is a little difference between older boards and the PU-22 and newer, how 
+a high-bit on the **Data** line must look. 
+
+For older boards than PU-22 is nothing special, a high-bit is just high and thats
+all. 
+
+```
+        ___________             _______________________
+Data:  |           |___________|                       |_______________________
+       |<--- 1 --->|<--- 0 --->|<--- 1 --->|<--- 1 --->|<--- 0 --->|<--- 0 --->|
+ 
+```
+
+But for PU-22 and newer, during a high-bit the **Data** line must have the same
+level as the**Gate** line. Let me show it in a Example: 
 
 
+```
+             __      _    _____   __    ___        __   _    _        ___
+Gate:   ____|  |____| |__|     |_|  |__|   |______|  |_| |__| |______|   |_____
+  
+             __                   __    ___        __     
+Data:  |____|  |_________________|  |__|   |______|  |_________________________
+       |<--- 1 --->|<--- 0 --->|<--- 1 --->|<--- 1 --->|<--- 0 --->|<--- 0 --->|
+
+
+```
 
 
 

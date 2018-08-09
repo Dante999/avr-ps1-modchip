@@ -43,6 +43,9 @@ LDFLAGS=
 
 all: clean hex eeprom flash_hex
 
+list_targets: 
+	avr-gcc --target-help
+
 hex: $(TARGET).hex size
 
 eeprom: $(TARGET)_eeprom.hex
