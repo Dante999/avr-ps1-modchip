@@ -66,19 +66,29 @@ region code. So generally we can say that one Bit must have a pulsewidth of
 
 ```
 
+So now we know how he bits should look like, lets concentrate on the bytes. We
+do an example with the European Region Code (SCEE). 
+
+```
+    Letter  ASCII-Hex   ASCII-Binary
+    S         0x53      0101 0011
+    C         0x43      0100 0011
+    E         0x45      0100 0101
+    E         0x45      0100 0101
+```
 
 ## Pinout
 this is the pinout on the playstation 1 mainboard:
 
 ```
     C325 Minus      GND             -> our Ground connection
-    C325 Plus       3.3V            -> do not use 5V as ATTiny Supply Voltage!
+    C325 Plus       3.3V            -> do not use 5V as supply voltage!
 
     IC304 Pin24     SUBQ            -> data-line for indication the position of the lens
     IC304 Pin26     SQCK            -> data-clock for SUBQ
 
-    IC732 Pin5      Gate (WFCK)     -> needed for PU22 or newer boards (modulatet on the data-line
-    for HIGH-Level)
+    IC732 Pin5      Gate (WFCK)     -> needed for PU22 or newer boards 
+                                       (modulatet on the data-line for HIGH-Level)
     IC732 Pin42     Data (CEO)      -> data-line where we inject the region code
 ```
 
