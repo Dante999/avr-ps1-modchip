@@ -67,15 +67,31 @@ region code. So generally we can say that one Bit must have a pulsewidth of
 ```
 
 So now we know how he bits should look like, lets concentrate on the bytes. We
-do an example with the European Region Code (SCEE). 
+do an example with the European Region Code (SCEE). The only thing we also have
+to do is, to switch the  highest and the lowest 4 Bits, becaues that is the format
+of the ASCII string what the playstation wants. So here is the example: 
 
 ```
-    Letter  ASCII-Hex   ASCII-Binary
-    S         0x53      0101 0011
-    C         0x43      0100 0011
-    E         0x45      0100 0101
-    E         0x45      0100 0101
+    Letter  ASCII-Hex   ASCII-Binary	Inject Sequence
+    S         0x53      0101 0011	-> 0011 0101
+    C         0x43      0100 0011	-> 0011 0100
+    E         0x45      0100 0101	-> 0101 0100
+    E         0x45      0100 0101	-> 0101 0100
 ```
+
+To complete the how-to we need to talk about the protocol which se playstation
+uses. This is pretty simple: there is 1 start bit (High) and 2 stop bits (Low). 
+So here is the complete injection stream:
+
+```
+
+1 0011 0101 00 1 0011 0100
+
+```
+
+
+
+
 
 ## Pinout
 this is the pinout on the playstation 1 mainboard:
