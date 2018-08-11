@@ -2,7 +2,7 @@
 this is the implementation of an Playstation 1 Modchip based on AVR Microcontrolers, 
 written in plain C. 
 
-![hardware_picture](img/thumbnail/pu22_finished.jpg)
+![hardware_picture](img/opener.jpg)
 
 ## Introduction
 At first I have to say, I'm not a great friend of all the arduino environment out 
