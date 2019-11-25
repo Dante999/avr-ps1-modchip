@@ -1,0 +1,40 @@
+---
+# Settings based on Linux Kernel recommendations
+BasedOnStyle: LLVM
+IndentWidth: 8
+UseTab: ForIndentation
+
+#BreakBeforeBraces: Linux
+
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+
+################################################
+# Custom Settings
+################################################
+BreakBeforeBraces: Custom
+
+BraceWrapping:
+   AfterFunction: true
+   BeforeElse: true
+
+# int aaaa = 12;
+# int b    = 23;
+# int ccc  = 23;
+AlignConsecutiveAssignments: true
+
+# int         aaaa = 12;
+# float       b = 23;
+# std::string ccc = 23;
+AlignConsecutiveDeclarations: true 
+
+# #if FOO
+#  #if BAR
+#    #include <foo>
+#  #endif
+# #endif
+IndentPPDirectives: AfterHash
+
+
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortFunctionsOnASingleLine: Empty
